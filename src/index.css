@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-dark-900 text-gray-100 antialiased;
+  }
+}
+
+.text-gradient-gold {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600;
+}
+
+.border-gradient-gold {
+  border-image: linear-gradient(to right, #AA8C2C, #D4AF37, #AA8C2C) 1;
+}
+
+/* Explicit Font Definitions to override/complement Tailwind */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap');
+
+.font-cinzel {
+  font-family: 'Cinzel', serif !important;
+}
+
+.font-decorative {
+  font-family: 'Cinzel Decorative', cursive !important;
+}
