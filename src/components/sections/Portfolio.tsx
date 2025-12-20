@@ -10,19 +10,22 @@ const projects = [
     title: "Galerias",
     category: "Web App",
     image: pabloFoto,
-    tags: ["React", "TypeScript", "Node.js"]
+    tags: ["React", "TypeScript", "Node.js"],
+    link: "https://pablofotografiaprofesional.free.nf/"
   },
   {
     title: "Luxury Gym",
     category: "Website and Mobile App",
     image: fitnessGym,
-    tags: ["html", "css", "node.js"]
+    tags: ["html", "css", "node.js"],
+    link: "https://pepehongomunoz-collab.github.io/fitness-gym/"
   },
   {
     title: "E-Commerce Premium",
     category: "WebApp",
     image: loreVentas,
-    tags: ["html", "css", "node.js"]
+    tags: ["html", "css", "node.js"],
+    link: "https://lore-ventas.shop/"
   }
 ];
 
@@ -35,20 +38,28 @@ export const Portfolio = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Proyectos <span className="text-gold-500">Destacados</span></h2>
             <div className="w-20 h-1 bg-gold-500 rounded-full"></div>
           </div>
-          <a href="#" className="hidden md:block text-gold-500 hover:text-gold-400 font-medium mt-4 md:mt-0">
+          <a
+            href="https://lorbeafus.github.io/portfolio/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:block text-gold-500 hover:text-gold-400 font-medium mt-4 md:mt-0"
+          >
             Ver todos los proyectos &rarr;
           </a>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
-            <motion.div
+            <motion.a
               key={index}
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="group relative overflow-hidden rounded-xl aspect-[4/3] cursor-pointer"
+              className="group relative overflow-hidden rounded-xl aspect-[4/3] cursor-pointer block"
             >
               <img
                 src={project.image}
@@ -69,12 +80,17 @@ export const Portfolio = () => {
                   Ver Detalles <ExternalLink className="ml-2 w-4 h-4" />
                 </div>
               </div>
-            </motion.div>
+            </motion.a>
           ))}
         </div>
 
         <div className="mt-8 text-center md:hidden">
-          <a href="#" className="text-gold-500 hover:text-gold-400 font-medium">
+          <a
+            href="https://lorbeafus.github.io/portfolio/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gold-500 hover:text-gold-400 font-medium"
+          >
             Ver todos los proyectos &rarr;
           </a>
         </div>
