@@ -31,7 +31,7 @@ export const Navbar = () => {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
             <img
-              src="/logo.png"
+              src={logo}
               alt="Nilo Tech"
               className="h-14 w-auto object-contain transition-transform group-hover:scale-105"
             />

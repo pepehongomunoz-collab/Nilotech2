@@ -1,24 +1,27 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
+import pabloFoto from '../../assets/pablo-fotografia.png';
+import fitnessGym from '../../assets/fitness-gym.png';
+import loreVentas from '../../assets/lore-ventas.png';
 
 const projects = [
   {
     title: "Galerias",
     category: "Web App",
-    image: "/pablo-fotografia.png",
+    image: pabloFoto,
     tags: ["React", "TypeScript", "Node.js"]
   },
   {
     title: "Luxury Gym",
     category: "Website and Mobile App",
-    image: "/fitness-gym.png",
+    image: fitnessGym,
     tags: ["html", "css", "node.js"]
   },
   {
     title: "E-Commerce Premium",
     category: "WebApp",
-    image: "/lore-ventas.png",
+    image: loreVentas,
     tags: ["html", "css", "node.js"]
   }
 ];

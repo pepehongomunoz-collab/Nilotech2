@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../../assets/logo.png';
 import { Code2, Instagram, Linkedin, Twitter } from 'lucide-react';
 
 export const Footer = () => {
@@ -9,7 +10,7 @@ export const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <a href="#" className="flex items-center gap-2 mb-6">
               <img
-                src="/logo.png"
+                src={logo}
                 alt="Nilo Tech"
                 className="h-14 w-auto object-contain"
               />
