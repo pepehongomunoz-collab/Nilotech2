@@ -23,7 +23,7 @@ export const Footer = () => {
               Transformamos negocios a través de soluciones digitales innovadoras. Calidad premium, diseño excepcional y resultados medibles.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-gold-500 hover:text-dark-900 transition-all">
+              <a href="https://www.instagram.com/nilo.tech.online/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-gold-500 hover:text-dark-900 transition-all">
                 <Instagram size={20} />
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-gold-500 hover:text-dark-900 transition-all">
