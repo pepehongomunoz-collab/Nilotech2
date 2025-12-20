@@ -26,10 +26,10 @@ export const Contact = () => {
     }
 
     emailjs.sendForm(
-      'YOUR_SERVICE_ID', // Replace with your Service ID
-      'YOUR_TEMPLATE_ID', // Replace with your Template ID
+      'service_z185xlf', // Replace with your Service ID
+      'template_wif78ek', // Replace with your Template ID
       form.current,
-      'YOUR_PUBLIC_KEY' // Replace with your Public Key
+      'zN5poxSAc6404Q5HP' // Replace with your Public Key
     )
       .then((result: any) => {
         console.log('Success:', result.text);
