@@ -26,7 +26,7 @@ export const Contact = () => {
     }
 
     emailjs.sendForm(
-      'service_z185xlf', // Replace with your Service ID
+      'service_bnvn7b9', // Replace with your Service ID
       'template_wif78ek', // Replace with your Template ID
       form.current,
       'zN5poxSAc6404Q5HP' // Replace with your Public Key
