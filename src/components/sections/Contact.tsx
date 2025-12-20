@@ -1,8 +1,49 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from '../ui/Button';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 export const Contact = () => {
+  const form = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const sendEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!form.current) return;
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    // Usamos el objeto global emailjs cargado via CDN en index.html
+    const emailjs = (window as any).emailjs;
+
+    if (!emailjs) {
+      console.error('EmailJS not loaded');
+      setSubmitStatus('error');
+      setIsSubmitting(false);
+      return;
+    }
+
+    emailjs.sendForm(
+      'YOUR_SERVICE_ID', // Replace with your Service ID
+      'YOUR_TEMPLATE_ID', // Replace with your Template ID
+      form.current,
+      'YOUR_PUBLIC_KEY' // Replace with your Public Key
+    )
+      .then((result: any) => {
+        console.log('Success:', result.text);
+        setSubmitStatus('success');
+        form.current?.reset();
+      }, (error: any) => {
+        console.error('Error:', error.text);
+        setSubmitStatus('error');
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
+
   return (
     <section id="contact" className="py-24 bg-dark-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,21 +91,21 @@ export const Contact = () => {
 
           {/* Form */}
           <div className="bg-dark-900 p-8 rounded-2xl border border-white/5 shadow-xl">
-            <form className="space-y-6">
+            <form ref={form} onSubmit={sendEmail} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Nombre</label>
-                  <input type="text" id="name" className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Tu nombre" />
+                  <label htmlFor="user_name" className="block text-sm font-medium text-gray-400 mb-2">Nombre</label>
+                  <input type="text" id="user_name" name="user_name" required className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Tu nombre" />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email</label>
-                  <input type="email" id="email" className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="tu@email.com" />
+                  <label htmlFor="user_email" className="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                  <input type="email" id="user_email" name="user_email" required className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="tu@email.com" />
                 </div>
               </div>
 
               <div>
                 <label htmlFor="service" className="block text-sm font-medium text-gray-400 mb-2">Servicio de Interés</label>
-                <select id="service" className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                <select id="service" name="service" className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
                   <option>Desarrollo Web</option>
                   <option>Aplicación Móvil</option>
                   <option>Diseño UI/UX</option>
@@ -74,12 +115,37 @@ export const Contact = () => {
 
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">Mensaje</label>
-                <textarea id="message" rows={4} className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Cuéntanos sobre tu proyecto..."></textarea>
+                <textarea id="message" name="message" required rows={4} className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Cuéntanos sobre tu proyecto..."></textarea>
               </div>
 
-              <Button className="w-full py-4 text-base">
-                Enviar Mensaje
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 text-base flex justify-center items-center gap-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  'Enviar Mensaje'
+                )}
               </Button>
+
+              {submitStatus === 'success' && (
+                <div className="flex items-center gap-2 text-green-500 bg-green-500/10 p-4 rounded-lg">
+                  <CheckCircle className="w-5 h-5" />
+                  <span>Mensaje enviado con éxito! Te contactaremos pronto.</span>
+                </div>
+              )}
+
+              {submitStatus === 'error' && (
+                <div className="flex items-center gap-2 text-red-500 bg-red-500/10 p-4 rounded-lg">
+                  <AlertCircle className="w-5 h-5" />
+                  <span>Hubo un error al enviar el mensaje. Inténtalo de nuevo.</span>
+                </div>
+              )}
             </form>
           </div>
 
