@@ -94,12 +94,12 @@ export const Contact = () => {
             <form ref={form} onSubmit={sendEmail} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="from_name" className="block text-sm font-medium text-gray-400 mb-2">Nombre</label>
-                  <input type="text" id="from_name" name="from_name" required className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Tu nombre" />
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Nombre</label>
+                  <input type="text" id="name" name="name" required className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Tu nombre" />
                 </div>
                 <div>
-                  <label htmlFor="from_email" className="block text-sm font-medium text-gray-400 mb-2">Email</label>
-                  <input type="email" id="from_email" name="from_email" required className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="tu@email.com" />
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                  <input type="email" id="email" name="email" required className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="tu@email.com" />
                 </div>
               </div>
 
