@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import logo from '../../assets/logo.png';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -79,19 +79,31 @@ export const Navbar = () => {
           >
             <div className="px-4 pt-2 pb-6 space-y-2">
               {navLinks.map((link) => (
-                <a
+                <button
                   key={link.name}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-3 py-4 text-base font-medium text-gray-300 hover:text-gold-500 hover:bg-white/5 rounded-md"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    // Usamos un pequeño delay para que la animación de cierre comience
+                    // y el scroll no se vea interrumpido por el cambio de estado.
+                    setTimeout(() => {
+                      const targetId = link.href.replace('#', '');
+                      const element = document.getElementById(targetId);
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }, 100);
+                  }}
+                  className="w-full text-left block px-3 py-4 text-base font-medium text-gray-300 hover:text-gold-500 hover:bg-white/5 rounded-md"
                 >
                   {link.name}
-                </a>
+                </button>
               ))}
               <div className="pt-4">
                 <Button className="w-full" onClick={() => {
                   setIsMobileMenuOpen(false);
-                  document.getElementById('contact')?.scrollIntoView();
+                  setTimeout(() => {
+                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 100);
                 }}>
                   Cotizar Proyecto
                 </Button>
