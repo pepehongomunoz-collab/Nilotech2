@@ -10,12 +10,12 @@ export const AboutSection = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="relative"
+                    className="relative text-center"
                 >
                     {/* Subtle gold decoration */}
                     <div className="absolute -left-4 top-0 w-1 h-24 bg-gradient-to-b from-gold-500 to-transparent rounded-full opacity-50 hidden md:block" />
 
-                    <div className="space-y-8 max-w-4xl">
+                    <div className="space-y-8 max-w-4xl mx-auto">
                         <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light">
                             En <span className="text-white font-semibold">Nilo Tech</span> ayudamos a empresas, emprendedores y marcas a transformar sus ideas en <span className="text-gold-500 font-medium text-glow-sm">soluciones digitales sólidas, escalables y orientadas a resultados</span>. Nos especializamos en el desarrollo de plataformas web y aplicaciones móviles que combinan diseño moderno, alto rendimiento y una arquitectura tecnológica pensada para crecer junto a tu negocio.
                         </p>
