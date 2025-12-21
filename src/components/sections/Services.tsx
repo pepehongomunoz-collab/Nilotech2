@@ -43,7 +43,7 @@ export const Services = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Nuestros <span className="text-gold-500">Servicios</span></h2>
           <div className="w-20 h-1 bg-gold-500 mx-auto rounded-full mb-6"></div>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Soluciones tecnológicas integrales diseñadas para impulsar el crecimiento de tu empresa en la era digital.
+            Soluciones tecnológicas integrales diseñadas para impulsar el crecimiento de tu empresa en la era digital. Ofrecemos un ecosistema completo de servicios tecnológicos que cubren todas las etapas de un proyecto digital, desde la idea inicial hasta su implementación y mantenimiento continuo. Nuestro equipo combina experiencia técnica, visión estratégica y atención al detalle para desarrollar productos confiables, escalables y alineados con las mejores prácticas de la industria.
           </p>
         </div>
 
