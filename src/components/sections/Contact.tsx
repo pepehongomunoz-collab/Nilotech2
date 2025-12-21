@@ -51,11 +51,13 @@ export const Contact = () => {
 
           {/* Info */}
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Empecemos a trabajar <br /><span className="text-gold-500">Juntos</span></h2>
-            <p className="text-gray-400 mb-10 text-lg">
-              ¿Tienes una idea en mente? Cuéntanos sobre tu proyecto y te ayudaremos a hacerlo realidad con la mejor tecnología.
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Consultoría y Contacto <br /><span className="text-gold-500">para Proyectos Digitales</span></h2>
+            <h2 className="sr-only">Hablemos sobre tu próximo Desarrollo Web o Aplicación Móvil</h2>
+            <p className="text-gray-400 mb-10 text-lg leading-relaxed">
+              ¿Tienes una gran idea en mente o un proyecto que necesita escalar? Cuéntanos tus objetivos y te ayudaremos a transformarlos en una realidad sólida utilizando la mejor tecnología del mercado actual. Nuestro equipo de expertos está listo para asesorarte en cada etapa del desarrollo.
             </p>
 
+            <h3 className="sr-only">Información de Contacto de Nilo Tech</h3>
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-dark-900 rounded-full flex items-center justify-center text-gold-500 border border-gold-500/20 shrink-0">

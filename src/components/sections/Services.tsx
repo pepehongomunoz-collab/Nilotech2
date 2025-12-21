@@ -40,7 +40,8 @@ export const Services = () => {
     <section id="services" className="py-24 bg-dark-800 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Nuestros <span className="text-gold-500">Servicios</span></h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Servicios Profesionales de <span className="text-gold-500">Desarrollo de Software</span></h2>
+          <h2 className="sr-only">Desarrollo Web, Apps y Diseño Digital</h2>
           <div className="w-20 h-1 bg-gold-500 mx-auto rounded-full mb-6"></div>
           <p className="text-gray-400 max-w-2xl mx-auto">
             Soluciones tecnológicas integrales diseñadas para impulsar el crecimiento de tu empresa en la era digital. Ofrecemos un ecosistema completo de servicios tecnológicos que cubren todas las etapas de un proyecto digital, desde la idea inicial hasta su implementación y mantenimiento continuo. Nuestro equipo combina experiencia técnica, visión estratégica y atención al detalle para desarrollar productos confiables, escalables y alineados con las mejores prácticas de la industria.

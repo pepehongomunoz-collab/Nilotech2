@@ -35,7 +35,8 @@ export const Portfolio = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Proyectos <span className="text-gold-500">Destacados</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Portafolio de <span className="text-gold-500">Diseño y Desarrollo</span></h2>
+            <h2 className="sr-only">Proyectos de Software y Aplicaciones Web Destacados</h2>
             <div className="w-20 h-1 bg-gold-500 rounded-full"></div>
           </div>
           <a

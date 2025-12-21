@@ -15,13 +15,16 @@ export const AboutSection = () => {
                     {/* Subtle gold decoration */}
                     <div className="absolute -left-4 top-0 w-1 h-24 bg-gradient-to-b from-gold-500 to-transparent rounded-full opacity-50 hidden md:block" />
 
+                    {/* SEO Heading - Visually Hidden */}
+                    <h2 className="sr-only">Expertos en Desarrollo de Software, Páginas Web y Aplicaciones Móviles</h2>
+
                     <div className="space-y-8 max-w-4xl mx-auto">
                         <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light">
-                            En <span className="text-white font-semibold">Nilo Tech</span> ayudamos a empresas, emprendedores y marcas a transformar sus ideas en <span className="text-gold-500 font-medium text-glow-sm">soluciones digitales sólidas, escalables y orientadas a resultados</span>. Nos especializamos en el desarrollo de plataformas web y aplicaciones móviles que combinan diseño moderno, alto rendimiento y una arquitectura tecnológica pensada para crecer junto a tu negocio.
+                            En <span className="text-white font-semibold">Nilo Tech</span> ayudamos a empresas, emprendedores y marcas a transformar sus ideas en <span className="text-gold-500 font-medium text-glow-sm">soluciones digitales sólidas, escalables y orientadas a resultados</span>. Nos especializamos en la consultoría tecnológica y el desarrollo de plataformas web y aplicaciones móviles que combinan un diseño moderno, alto rendimiento y una arquitectura tecnológica modular pensada para evolucionar y crecer junto a los objetivos de tu negocio.
                         </p>
 
                         <p className="text-lg md:text-xl text-gray-400 leading-relaxed font-light">
-                            Trabajamos con tecnologías actuales como <span className="text-white border-b border-gold-500/30">React, Node.js</span> y arquitecturas backend robustas para garantizar productos seguros, rápidos y preparados para integrarse con otros sistemas. Nuestro enfoque se basa en entender tus objetivos comerciales, analizar tus procesos y construir <span className="text-white">soluciones a medida</span> que generen valor real, mejoren la experiencia del usuario y optimicen la presencia digital de tu empresa.
+                            Trabajamos con tecnologías de vanguardia como <span className="text-white border-b border-gold-500/30">React, Node.js, TypeScript</span> y arquitecturas backend robustas para garantizar productos digitales seguros, rápidos y totalmente preparados para integrarse con sistemas externos. Nuestro enfoque integral se basa en entender profundamente tus necesidades comerciales, analizar los procesos internos y construir <span className="text-white font-medium">soluciones a medida</span> que generen valor real desde el primer día, mejoren la experiencia del usuario final y optimicen la presencia digital competitiva de tu empresa en el mercado actual.
                         </p>
                     </div>
                 </motion.div>
