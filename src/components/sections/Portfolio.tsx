@@ -1,31 +1,45 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
-import pabloFoto from '../../assets/pablo-fotografia.png';
-import fitnessGym from '../../assets/fitness-gym.png';
-import loreVentas from '../../assets/lore-ventas.png';
+import pabloFoto from '../../assets/img/pablo.png';
+import pabloLogo from '../../assets/img/Pablo logo (500 x500 px).webp';
+import mayraBiondo from '../../assets/img/mayra1.png';
+import mayraLogo from '../../assets/img/mayralogo.png';
+import loreVentas from '../../assets/img/lore-ventas.png';
+import lubriEden from '../../assets/img/lubri1.png';
+import lubriLogo from '../../assets/img/lubrilogo.png';
 
 const projects = [
   {
-    title: "Galerias",
+    title: "Pablo Fotografia",
     category: "Web App",
     image: pabloFoto,
-    tags: ["React", "TypeScript", "Node.js"],
-    link: "https://pablofotografiaprofesional.free.nf/"
+    logo: pabloLogo,
+    tags: ["HTML5", "CSS3", "SASS", "JS", "Node Js", "Firebase", "Cloudinary"],
+    link: "https://lorbeafus.github.io/Pablo-Fotografia/"
   },
   {
-    title: "Luxury Gym",
+    title: "Mayra Biondo",
     category: "Website and Mobile App",
-    image: fitnessGym,
-    tags: ["html", "css", "node.js"],
-    link: "https://pepehongomunoz-collab.github.io/fitness-gym/"
+    image: mayraBiondo,
+    logo: mayraLogo,
+    tags: ["HTML5", "SASS", "JS", "Node Js", "Firebase", "Cloudinary"],
+    link: "https://mayrabiondopsicologa.vercel.app/"
   },
   {
     title: "E-Commerce Premium",
     category: "WebApp",
     image: loreVentas,
-    tags: ["html", "css", "node.js"],
+    logo: null,
+    tags: ["html", "SASS", "Node.js", "mongoDB", "Cloudinary"],
     link: "https://lore-ventas.shop/"
+  },
+  {
+    title: "Lubricentro Eden",
+    category: "E-commerce",
+    image: lubriEden,
+    logo: lubriLogo,
+    tags: ["html", "css", "node.js", "stripe", "whatsapp", "firebase", "cloudinary", "mongoDB"],
+    link: "https://lubricentro-eden.com.ar/"
   }
 ];
 
@@ -67,6 +81,15 @@ export const Portfolio = () => {
                 alt={project.title}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
+              {project.logo && (
+                <div className="absolute top-4 left-4 z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-2 shadow-lg">
+                  <img
+                    src={project.logo}
+                    alt={`${project.title} logo`}
+                    className="w-12 h-12 object-contain"
+                  />
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                 <span className="text-gold-500 text-sm font-medium mb-2">{project.category}</span>
                 <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
