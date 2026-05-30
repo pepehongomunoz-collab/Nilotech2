@@ -6,6 +6,7 @@ import { Services } from './components/sections/Services';
 import { Portfolio } from './components/sections/Portfolio';
 import { Contact } from './components/sections/Contact';
 import { Footer } from './components/layout/Footer';
+import { WhatsAppButton } from './components/ui/WhatsAppButton';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Contact />
       </main>
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }
