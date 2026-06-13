@@ -7,6 +7,7 @@ import { Portfolio } from './components/sections/Portfolio';
 import { Contact } from './components/sections/Contact';
 import { Footer } from './components/layout/Footer';
 import { WhatsAppButton } from './components/ui/WhatsAppButton';
+import { Chatbot } from './components/ui/Chatbot';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       </main>
       <Footer />
       <WhatsAppButton />
+      <Chatbot />
     </div>
   );
 }
