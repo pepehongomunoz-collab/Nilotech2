@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Globe, Smartphone, Palette, Code2, HeartHandshake, Layers } from 'lucide-react';
+import { Globe, Smartphone, Palette, Code2, HeartHandshake, Layers, Megaphone } from 'lucide-react';
 
 const services = [
   {
@@ -31,6 +31,11 @@ const services = [
     icon: <HeartHandshake className="w-8 h-8" />,
     title: "Sistemas & Gestión interna",
     description: "Plataformas internas y soluciones a medida para automatizar procesos y optimizar tu negocio."
+  },
+  {
+    icon: <Megaphone className="w-8 h-8" />,
+    title: "Publicidad Digital & Ads",
+    description: "Gestión estratégica de campañas en Google Ads y Meta Ads para captar clientes potenciales calificados y maximizar tus ventas."
   }
 ];
 
@@ -45,7 +50,7 @@ export const Services = () => {
         {/* Main Header Copy */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight break-words">
-            Servicios de <span className="text-gradient-gold">Desarrollo Web y Aplicaciones</span>
+            Desarrollo Web, Apps y <span className="text-gradient-gold">Publicidad Digital</span>
           </h2>
           <div className="w-24 h-1 bg-gold-500 mx-auto rounded-full mb-8"></div>
           
@@ -65,7 +70,7 @@ export const Services = () => {
         {/* Development Offerings Grid Section */}
         <div className="mb-16">
           <h3 className="text-2xl font-bold text-center text-white mb-10 tracking-wide uppercase text-glow-sm">
-            Lo que podemos desarrollar para tu empresa
+            Nuestros servicios y soluciones digitales
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -76,7 +81,9 @@ export const Services = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-dark-900 p-8 rounded-xl border border-white/5 hover:border-gold-500/50 transition-all group hover:shadow-lg hover:shadow-gold-500/5 cursor-default"
+                className={`bg-dark-900 p-8 rounded-xl border border-white/5 hover:border-gold-500/50 transition-all group hover:shadow-lg hover:shadow-gold-500/5 cursor-default ${
+                  index === 6 ? 'md:col-span-2 md:max-w-md md:mx-auto lg:col-span-3 lg:max-w-md lg:mx-auto' : ''
+                }`}
               >
                 <div className="w-14 h-14 bg-dark-800 rounded-lg flex items-center justify-center text-gold-500 mb-6 group-hover:scale-110 transition-transform duration-300 border border-white/5 group-hover:border-gold-500/30">
                   {service.icon}

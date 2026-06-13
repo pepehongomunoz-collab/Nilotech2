@@ -61,14 +61,14 @@ export const Contact = () => {
             </h2>
             <div className="w-20 h-1 bg-gold-500 rounded-full mb-8"></div>
             
-            <h2 className="sr-only">Hablemos sobre tu próximo Desarrollo Web o Aplicación Móvil</h2>
+            <h2 className="sr-only">Hablemos sobre tu próximo desarrollo o campaña de publicidad digital</h2>
             
             <div className="space-y-6 text-gray-300 text-lg leading-relaxed font-light mb-10">
               <p className="font-semibold text-white">
-                La forma en que tu empresa se ve en internet influye directamente en la confianza que generan tus potenciales clientes.
+                La forma en que tu empresa se ve en internet y cómo te promocionas influye directamente en la confianza y las ventas que generas.
               </p>
               <p>
-                Si estás buscando un sitio web o una aplicación desarrollada a medida, podemos ayudarte a construir una solución profesional que represente el verdadero valor de tu marca.
+                Si estás buscando un sitio web, una aplicación a medida o potenciar tus ventas con campañas de publicidad digital estratégicas, podemos ayudarte a construir una solución profesional que impulse los resultados de tu negocio.
               </p>
               <p>
                 Completá el formulario y contanos sobre tu proyecto. Analizaremos tus necesidades y te contactaremos para ayudarte a encontrar la mejor solución para tu negocio.
@@ -151,6 +151,7 @@ export const Contact = () => {
                 <select id="service" name="service" className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
                   <option>Desarrollo Web</option>
                   <option>Aplicación Móvil</option>
+                  <option>Publicidad Digital</option>
                   <option>Diseño UI/UX</option>
                   <option>Otro</option>
                 </select>

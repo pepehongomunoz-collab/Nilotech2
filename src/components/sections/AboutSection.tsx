@@ -67,7 +67,7 @@ export const AboutSection = () => {
                     {/* Concluding block */}
                     <div className="bg-gradient-to-r from-gold-500/10 via-transparent to-gold-500/10 border-t border-b border-gold-500/20 py-8 px-6 text-center max-w-4xl mx-auto rounded-xl">
                         <p className="text-lg md:text-xl text-gray-300 leading-relaxed font-light">
-                            En <span className="text-white font-semibold">Nilo Tech</span> desarrollamos sitios web y aplicaciones personalizadas que combinan diseño, estrategia y tecnología para ayudar a empresas y profesionales a destacar en un entorno cada vez más competitivo.
+                            En <span className="text-white font-semibold">Nilo Tech</span> desarrollamos sitios web, aplicaciones personalizadas y campañas de publicidad digital que combinan diseño, estrategia y tecnología para ayudar a empresas y profesionales a destacar y captar clientes en un entorno cada vez más competitivo.
                         </p>
                     </div>
                 </motion.div>

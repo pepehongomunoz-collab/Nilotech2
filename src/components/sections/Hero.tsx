@@ -22,7 +22,7 @@ export const Hero = () => {
           transition={{ duration: 0.8 }}
         >
           <span className="inline-block py-1 px-3 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-500 text-sm font-semibold tracking-wider mb-6">
-            SITIOS WEB Y APPS PERSONALIZADAS
+            SITIOS WEB, APPS Y PUBLICIDAD DIGITAL
           </span>
           <h1 className="text-3xl md:text-6xl font-bold text-white mb-6 leading-tight break-words">
             Tu negocio merece <br /> una presencia digital <br className="hidden sm:block" /> que genere confianza
@@ -31,7 +31,7 @@ export const Hero = () => {
             </span>
           </h1>
           <p className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
-            Diseñamos sitios web y aplicaciones personalizadas para empresas y profesionales que buscan diferenciarse, transmitir confianza y generar más oportunidades de negocio.
+            Diseñamos sitios web, aplicaciones personalizadas y campañas de publicidad digital para empresas y profesionales que buscan diferenciarse, transmitir confianza y vender más.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button className="text-lg px-8 py-4" onClick={() => document.getElementById('contact')?.scrollIntoView()}>
