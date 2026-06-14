@@ -17,14 +17,14 @@ interface GeminiMessage {
 const WELCOME_MESSAGE: Message = {
   id: 'welcome',
   role: 'assistant',
-  content: '¡Hola! 👋 Soy el asistente virtual de **Nilo Tech**. Estoy acá para ayudarte con cualquier consulta sobre nuestros servicios de desarrollo web, apps y publicidad digital.\n\n¿En qué puedo ayudarte?',
+  content: '¡Hola! 👋 Soy **Nilito**, el asistente virtual de **Nilo Tech**. Estoy acá para ayudarte con cualquier consulta sobre nuestros servicios de desarrollo web, apps y publicidad digital.\n\n¿En qué puedo ayudarte?',
   timestamp: new Date(),
 };
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-const SYSTEM_PROMPT = `Eres el asistente virtual de Nilo Tech, una empresa de desarrollo de software y publicidad digital con sede en Buenos Aires, Argentina.
+const SYSTEM_PROMPT = `Eres Nilito, el asistente virtual de Nilo Tech, una empresa de desarrollo de software y publicidad digital con sede en Buenos Aires, Argentina.
 
 Tu objetivo es dar una bienvenida cálida, profesional y eficiente a los visitantes del sitio web. Debés responder siempre en español argentino, con un tono amigable, cercano pero profesional.
 
@@ -60,7 +60,23 @@ INSTRUCCIONES DE COMPORTAMIENTO:
 - Si no sabés algo específico, sugerí que se comuniquen directamente con el equipo.
 - Nunca inventes información sobre precios, plazos o tecnologías que no estén en tu contexto.
 - Podés usar emojis con moderación para dar calidez.
-- Si te preguntan algo fuera de tema (no relacionado con Nilo Tech o servicios digitales), respondé amablemente que estás especializado en ayudar con consultas sobre servicios digitales.`;
+- Si te preguntan algo fuera de tema (no relacionado con Nilo Tech o servicios digitales), respondé amablemente que estás especializado en ayudar con consultas sobre servicios digitales.
+
+PREGUNTAS DE ASESORAMIENTO ("¿Qué me conviene?"):
+- Cuando el cliente te pregunte qué tipo de servicio o desarrollo le conviene para su negocio, qué es mejor para él o exprese dudas sobre qué tipo de página o aplicación necesita:
+  1. No respondas de forma genérica.
+  2. Preguntale amablemente a qué se dedica su negocio y qué le gustaría tener. Presentale las siguientes opciones y explicale de forma sencilla sus beneficios:
+     * **Sitio institucional / Landing page**: Ideal si solo necesita una página de referencia para dar seriedad, presencia online y confianza.
+     * **E-commerce (Tienda online)**: Ideal si quiere vender y ofrecer sus productos directamente por internet de forma automatizada y segura.
+     * **Sitio para servicios / a medida**: Ideal si se dedica a brindar servicios y necesita algo particular como reservas, turnos, cotizadores o un área privada.
+     * **Aplicación móvil (para celular)**: Ideal si busca brindar una experiencia exclusiva, interactiva, que funcione directamente en los celulares (iOS y Android) de sus usuarios y fidelice clientes.
+  3. Intenta concertar una comunicación directa por WhatsApp o coordinar una reunión (Meet) en algún horario específico para definir los detalles y brindarle un asesoramiento personalizado sin cargo.
+
+EVENTOS DE CONTACTO Y REUNIONES:
+- En cuanto el cliente decida o acepte agendar una reunión (Meet) o deje sus datos de contacto (nombre, email, y/o teléfono), debes agregar al final de tu respuesta (en una nueva línea) la etiqueta especial:
+  [CONTACT_EVENT] {"name": "Nombre", "email": "Email", "phone": "Teléfono", "meeting_time": "Horario propuesto", "business_type": "Negocio/Interés", "notes": "Notas adicionales"}
+  Rellena este JSON únicamente con los datos que el cliente haya proporcionado o que hayas podido inferir en la conversación. Deja en blanco ("") los campos que no conozcas.
+  No le muestres ni expliques esta etiqueta al cliente, es para procesamiento interno. Asegúrate de formatearla exactamente en esa estructura JSON válida después del texto [CONTACT_EVENT].`;
 
 async function callGeminiAPI(messages: Message[]): Promise<string> {
   // Build conversation history for Gemini
@@ -162,10 +178,56 @@ export const Chatbot = () => {
     try {
       const reply = await callGeminiAPI(updatedMessages);
 
+      let cleanReply = reply;
+      if (reply.includes('[CONTACT_EVENT]')) {
+        const parts = reply.split('[CONTACT_EVENT]');
+        cleanReply = parts[0].trim();
+        const jsonStr = parts[1].trim();
+        try {
+          const startIdx = jsonStr.indexOf('{');
+          const endIdx = jsonStr.lastIndexOf('}');
+          if (startIdx !== -1 && endIdx !== -1) {
+            const cleanJsonStr = jsonStr.substring(startIdx, endIdx + 1);
+            const contactData = JSON.parse(cleanJsonStr);
+
+            // Send notification email via EmailJS
+            const emailjs = (window as any).emailjs;
+            if (emailjs) {
+              emailjs.send(
+                'service_bnvn7b9',
+                'template_wif78ek',
+                {
+                  name: contactData.name || 'Cliente del Chatbot',
+                  email: contactData.email || 'no-reply@nilotech.online',
+                  service: 'Reunión / Contacto desde Chatbot (Nilito)',
+                  message: `El cliente ha interactuado con Nilito y dejó datos de contacto/reunión.
+
+Detalles:
+- Nombre: ${contactData.name || 'No proporcionado'}
+- Email: ${contactData.email || 'No proporcionado'}
+- Teléfono/WhatsApp: ${contactData.phone || 'No proporcionado'}
+- Horario de Reunión (Meet): ${contactData.meeting_time || 'No proporcionado'}
+- Tipo de Negocio/Interés: ${contactData.business_type || 'No proporcionado'}
+- Notas: ${contactData.notes || 'No proporcionado'}`
+                },
+                'zN5poxSAc6404Q5HP'
+              ).then(
+                (res: any) => console.log('Email sent from Chatbot successfully:', res.status, res.text),
+                (err: any) => console.error('Email send from Chatbot failed:', err)
+              );
+            } else {
+              console.error('EmailJS not loaded in Chatbot.tsx');
+            }
+          }
+        } catch (e) {
+          console.error('Failed to parse contact JSON:', e, jsonStr);
+        }
+      }
+
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: reply,
+        content: cleanReply,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMessage]);
@@ -196,7 +258,7 @@ export const Chatbot = () => {
       {/* Chat Toggle Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 left-6 z-50 flex items-center justify-center w-16 h-16 rounded-full shadow-2xl transition-all duration-300 group"
+        className="fixed bottom-[104px] right-6 z-50 flex items-center justify-center w-16 h-16 rounded-full shadow-2xl transition-all duration-300 group"
         style={{
           background: 'linear-gradient(135deg, #D4AF37, #AA8C2C)',
         }}
@@ -237,7 +299,7 @@ export const Chatbot = () => {
 
         {/* Pulse ring */}
         {!isOpen && (
-          <span className="absolute inline-flex h-full w-full rounded-full opacity-40 animate-ping -z-10"
+          <span className="absolute inline-flex h-full w-full rounded-full animate-soft-pulse -z-10"
             style={{ background: 'linear-gradient(135deg, #D4AF37, #AA8C2C)' }}
           />
         )}
@@ -251,7 +313,7 @@ export const Chatbot = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed bottom-24 left-6 z-50 w-[360px] max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-8rem)] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+            className="fixed bottom-[176px] right-6 z-50 w-[360px] max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-14rem)] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-white/10"
             style={{
               background: 'linear-gradient(180deg, #0a0a0a 0%, #050505 100%)',
             }}
@@ -271,7 +333,7 @@ export const Chatbot = () => {
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-dark-900" />
               </div>
               <div className="flex-1">
-                <h3 className="text-white font-semibold text-sm">Asistente Nilo Tech</h3>
+                <h3 className="text-white font-semibold text-sm">Nilito</h3>
                 <p className="text-green-400 text-xs font-medium">En línea</p>
               </div>
               <button
@@ -397,7 +459,7 @@ export const Chatbot = () => {
                 </button>
               </div>
               <p className="text-[10px] text-gray-600 text-center mt-2">
-                Asistente con IA · Nilo Tech
+                Nilito · Asistente con IA
               </p>
             </div>
           </motion.div>

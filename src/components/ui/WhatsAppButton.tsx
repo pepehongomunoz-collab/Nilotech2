@@ -14,7 +14,7 @@ export const WhatsAppButton = () => {
       aria-label="Contactar por WhatsApp"
     >
       {/* Ripple Animation Effect */}
-      <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75 animate-ping -z-10 group-hover:opacity-40"></span>
+      <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] animate-soft-pulse -z-10 group-hover:opacity-40"></span>
       
       {/* SVG WhatsApp Custom Icon */}
       <svg

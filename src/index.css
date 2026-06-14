@@ -31,3 +31,18 @@
 .font-decorative {
   font-family: 'Cinzel Decorative', cursive !important;
 }
+
+@keyframes soft-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
