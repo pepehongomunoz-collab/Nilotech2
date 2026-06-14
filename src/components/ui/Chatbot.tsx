@@ -9,6 +9,11 @@ interface Message {
   timestamp: Date;
 }
 
+interface GeminiMessage {
+  role: 'user' | 'model';
+  parts: { text: string }[];
+}
+
 const WELCOME_MESSAGE: Message = {
   id: 'welcome',
   role: 'assistant',
@@ -16,8 +21,99 @@ const WELCOME_MESSAGE: Message = {
   timestamp: new Date(),
 };
 
-// Determine API endpoint based on environment
-const CHAT_API_URL = '/.netlify/functions/chat';
+const GEMINI_API_KEY = 'AIzaSyC_IAxkbPCHivF3YATFrrKo6gIvxgzWREs';
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+const SYSTEM_PROMPT = `Eres el asistente virtual de Nilo Tech, una empresa de desarrollo de software y publicidad digital con sede en Buenos Aires, Argentina.
+
+Tu objetivo es dar una bienvenida cálida, profesional y eficiente a los visitantes del sitio web. Debés responder siempre en español argentino, con un tono amigable, cercano pero profesional.
+
+INFORMACIÓN CLAVE DE NILO TECH:
+
+SERVICIOS:
+1. Sitios web corporativos: Diseño y desarrollo de sitios institucionales premium para fortalecer la marca y credibilidad.
+2. Landing pages de conversión: Páginas de aterrizaje optimizadas para captar clientes y potenciar campañas.
+3. Aplicaciones web a medida: Plataformas dinámicas construidas con tecnologías modernas como React.
+4. Aplicaciones móviles: Apps para iOS y Android de alto rendimiento.
+5. Tiendas online (E-commerce): Canales de venta digitales seguros y optimizados.
+6. Sistemas & Gestión interna: Plataformas para automatizar procesos internos.
+7. Publicidad Digital & Ads: Gestión estratégica de campañas en Google Ads y Meta Ads para captar clientes calificados y maximizar ventas.
+
+DIFERENCIADORES:
+- Desarrollo 100% personalizado, sin plantillas genéricas.
+- Cada proyecto se construye desde cero, adaptado a la marca y objetivos del cliente.
+- Soporte y acompañamiento durante todo el proyecto.
+- Enfoque en diseño, experiencia de usuario y tecnología moderna.
+- Soluciones preparadas para crecer junto al negocio del cliente.
+
+CONTACTO:
+- Email: desarrollos@nilotech.online
+- Teléfono/WhatsApp: +54 11 2158-5424
+- Ubicación: Buenos Aires, Argentina
+- Instagram: @nilo.tech.online
+- Web: nilotech.online
+
+INSTRUCCIONES DE COMPORTAMIENTO:
+- Sé conciso y directo en tus respuestas, no más de 2-3 párrafos.
+- Si el visitante pregunta por precios, explicá que cada proyecto es personalizado y que lo ideal es agendar una consulta gratuita para evaluar sus necesidades.
+- Siempre intentá orientar la conversación hacia que el cliente deje sus datos o se contacte por WhatsApp/email.
+- Si no sabés algo específico, sugerí que se comuniquen directamente con el equipo.
+- Nunca inventes información sobre precios, plazos o tecnologías que no estén en tu contexto.
+- Podés usar emojis con moderación para dar calidez.
+- Si te preguntan algo fuera de tema (no relacionado con Nilo Tech o servicios digitales), respondé amablemente que estás especializado en ayudar con consultas sobre servicios digitales.`;
+
+async function callGeminiAPI(messages: Message[]): Promise<string> {
+  // Build conversation history for Gemini
+  const geminiContents: GeminiMessage[] = messages
+    .filter((m) => m.id !== 'welcome')
+    .map((m) => ({
+      role: m.role === 'assistant' ? 'model' as const : 'user' as const,
+      parts: [{ text: m.content }],
+    }));
+
+  const requestBody = JSON.stringify({
+    system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+    contents: geminiContents,
+    generationConfig: {
+      temperature: 0.7,
+      topP: 0.9,
+      topK: 40,
+      maxOutputTokens: 512,
+    },
+  });
+
+  // Retry logic for rate limits
+  const MAX_RETRIES = 2;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const response = await fetch(GEMINI_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: requestBody,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return (
+        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        'Disculpá, no pude procesar tu mensaje. ¿Podrías intentar de nuevo?'
+      );
+    }
+
+    if (response.status === 429 && attempt < MAX_RETRIES) {
+      await new Promise((r) => setTimeout(r, (attempt + 1) * 2000));
+      continue;
+    }
+
+    if (response.status === 429) {
+      return 'En este momento tenemos muchas consultas. Por favor intentá de nuevo en unos segundos, o contactanos directamente por WhatsApp al +54 11 2158-5424. 😊';
+    }
+
+    throw new Error(`API error: ${response.status}`);
+  }
+
+  throw new Error('Max retries exceeded');
+}
 
 export const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +138,6 @@ export const Chatbot = () => {
   }, [isOpen]);
 
   const formatMessageContent = (content: string) => {
-    // Simple markdown-like formatting
     return content
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\n/g, '<br />');
@@ -65,32 +160,16 @@ export const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      // Prepare messages for API (exclude welcome, send only role + content)
-      const apiMessages = updatedMessages
-        .filter((m) => m.id !== 'welcome')
-        .map((m) => ({ role: m.role, content: m.content }));
+      const reply = await callGeminiAPI(updatedMessages);
 
-      const response = await fetch(CHAT_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: apiMessages }),
-      });
-
-      const data = await response.json();
-
-      // Handle both success and rate-limit with friendly message
-      if (response.ok || data.reply) {
-        const assistantMessage: Message = {
-          id: `assistant-${Date.now()}`,
-          role: 'assistant',
-          content: data.reply,
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
-        if (!isOpen) setHasUnread(true);
-      } else {
-        throw new Error('API error');
-      }
+      const assistantMessage: Message = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant',
+        content: reply,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+      if (!isOpen) setHasUnread(true);
     } catch {
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
