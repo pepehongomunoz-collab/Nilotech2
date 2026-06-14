@@ -21,8 +21,8 @@ const WELCOME_MESSAGE: Message = {
   timestamp: new Date(),
 };
 
-const GEMINI_API_KEY = 'AIzaSyC_IAxkbPCHivF3YATFrrKo6gIvxgzWREs';
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 const SYSTEM_PROMPT = `Eres el asistente virtual de Nilo Tech, una empresa de desarrollo de software y publicidad digital con sede en Buenos Aires, Argentina.
 
