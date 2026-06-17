@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="64" fill="#0a0a0a"/>
+  <g transform="translate(256, 270)" fill="none" stroke="#D4AF37" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Outer triangle -->
+    <polygon points="0,-190 165,95 -165,95" fill="none"/>
+    <!-- Inner triangle -->
+    <polygon points="0,-150 130,75 -130,75" fill="none"/>
+    <!-- Circuit traces -->
+    <path d="M-90,55 L-50,55 L-20,25 L30,25"/>
+    <path d="M-80,35 L-40,35 L-5,0 L45,0"/>
+    <path d="M-65,15 L-25,15 L10,-25 L55,-25"/>
+    <path d="M-50,-5 L-10,-5 L25,-50 L60,-50"/>
+    <path d="M-35,-30 L5,-30 L35,-75 L50,-75"/>
+    <!-- Circuit nodes -->
+    <circle cx="30" cy="25" r="8" fill="#D4AF37"/>
+    <circle cx="45" cy="0" r="8" fill="#D4AF37"/>
+    <circle cx="55" cy="-25" r="8" fill="#D4AF37"/>
+    <circle cx="60" cy="-50" r="8" fill="#D4AF37"/>
+    <circle cx="50" cy="-75" r="8" fill="#D4AF37"/>
+  </g>
+</svg>

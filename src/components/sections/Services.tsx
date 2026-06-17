@@ -35,7 +35,7 @@ const services = [
   {
     icon: <Megaphone className="w-8 h-8" />,
     title: "Publicidad Digital & Ads",
-    description: "Gestión estratégica de campañas en Google Ads y Meta Ads para captar clientes potenciales calificados y maximizar tus ventas."
+    description: "Gestión estratégica de campañas en Meta Ads (Facebook e Instagram) para captar clientes potenciales calificados y maximizar tus ventas."
   }
 ];
 

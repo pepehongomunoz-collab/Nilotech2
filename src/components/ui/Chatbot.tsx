@@ -37,7 +37,7 @@ SERVICIOS:
 4. Aplicaciones móviles: Apps para iOS y Android de alto rendimiento.
 5. Tiendas online (E-commerce): Canales de venta digitales seguros y optimizados.
 6. Sistemas & Gestión interna: Plataformas para automatizar procesos internos.
-7. Publicidad Digital & Ads: Gestión estratégica de campañas en Google Ads y Meta Ads para captar clientes calificados y maximizar ventas.
+7. Publicidad Digital & Ads: Gestión estratégica de campañas en Meta Ads (Facebook e Instagram) para captar clientes calificados y maximizar ventas.
 
 DIFERENCIADORES:
 - Desarrollo 100% personalizado, sin plantillas genéricas.
@@ -131,6 +131,18 @@ async function callGeminiAPI(messages: Message[]): Promise<string> {
   throw new Error('Max retries exceeded');
 }
 
+// Helper to send Umami custom events
+const trackEvent = (eventName: string, eventData?: Record<string, string | number>) => {
+  try {
+    const umami = (window as any).umami;
+    if (umami?.track) {
+      umami.track(eventName, eventData);
+    }
+  } catch (e) {
+    // Silently fail if Umami is not loaded
+  }
+};
+
 export const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
@@ -145,11 +157,12 @@ export const Chatbot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Focus input when chat opens
+  // Focus input when chat opens + track open event
   useEffect(() => {
     if (isOpen) {
       setHasUnread(false);
       setTimeout(() => inputRef.current?.focus(), 300);
+      trackEvent('chatbot-opened');
     }
   }, [isOpen]);
 
@@ -162,6 +175,12 @@ export const Chatbot = () => {
   const sendMessage = async (overrideText?: string) => {
     const trimmed = (overrideText || input).trim();
     if (!trimmed || isLoading) return;
+
+    // Track user message in Umami
+    trackEvent('chatbot-user-message', {
+      message_preview: trimmed.substring(0, 100),
+      message_length: trimmed.length,
+    });
 
     const userMessage: Message = {
       id: `user-${Date.now()}`,
@@ -231,8 +250,40 @@ Detalles:
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMessage]);
+
+      // Track successful bot response
+      trackEvent('chatbot-bot-response', {
+        response_length: cleanReply.length,
+        has_contact_event: reply.includes('[CONTACT_EVENT]') ? 'yes' : 'no',
+      });
+
       if (!isOpen) setHasUnread(true);
-    } catch {
+    } catch (error) {
+      // Classify the error type for diagnostics
+      const err = error as Error;
+      let errorType = 'unknown';
+      let errorDetail = err?.message || 'Sin detalles';
+
+      if (errorDetail.includes('API error: 429')) {
+        errorType = 'rate_limit';
+      } else if (errorDetail.includes('API error: 401') || errorDetail.includes('API error: 403')) {
+        errorType = 'auth_error';
+      } else if (errorDetail.includes('API error: 5')) {
+        errorType = 'server_error';
+      } else if (errorDetail.includes('API error:')) {
+        errorType = 'api_error';
+      } else if (errorDetail.includes('Failed to fetch') || errorDetail.includes('NetworkError') || errorDetail.includes('net::')) {
+        errorType = 'network_error';
+      } else if (errorDetail.includes('Max retries')) {
+        errorType = 'max_retries';
+      }
+
+      // Track error in Umami for diagnostics
+      trackEvent('chatbot-error', {
+        error_type: errorType,
+        error_detail: errorDetail.substring(0, 200),
+      });
+
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
         role: 'assistant',
@@ -440,7 +491,7 @@ Detalles:
                   className="flex-1 bg-transparent text-white text-sm placeholder-gray-500 outline-none disabled:opacity-50"
                 />
                 <button
-                  onClick={sendMessage}
+                  onClick={() => sendMessage()}
                   disabled={!input.trim() || isLoading}
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-dark-900 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-105"
                   style={{
