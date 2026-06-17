@@ -143,6 +143,109 @@ const trackEvent = (eventName: string, eventData?: Record<string, string | numbe
   }
 };
 
+// Centralized contact notification sender via EmailJS
+interface ContactData {
+  name?: string;
+  email?: string;
+  phone?: string;
+  meeting_time?: string;
+  business_type?: string;
+  notes?: string;
+}
+
+const sendContactNotification = (contactData: ContactData, detectionMethod: string) => {
+  // Track contact event in Umami
+  trackEvent('chatbot-contact-detected', {
+    method: detectionMethod,
+    has_email: contactData.email ? 'yes' : 'no',
+    has_phone: contactData.phone ? 'yes' : 'no',
+    has_name: contactData.name ? 'yes' : 'no',
+  });
+
+  const emailjs = (window as any).emailjs;
+  if (emailjs) {
+    emailjs.send(
+      'service_bnvn7b9',
+      'template_wif78ek',
+      {
+        name: contactData.name || 'Cliente del Chatbot',
+        email: contactData.email || 'no-reply@nilotech.online',
+        service: 'Reunión / Contacto desde Chatbot (Nilito)',
+        message: `📩 Nuevo lead capturado por Nilito (${detectionMethod === 'contact_event_tag' ? 'detección IA' : 'detección automática'})
+
+Detalles del cliente:
+- Nombre: ${contactData.name || 'No proporcionado'}
+- Email: ${contactData.email || 'No proporcionado'}
+- Teléfono/WhatsApp: ${contactData.phone || 'No proporcionado'}
+- Horario de Reunión (Meet): ${contactData.meeting_time || 'No proporcionado'}
+- Tipo de Negocio/Interés: ${contactData.business_type || 'No proporcionado'}
+- Notas: ${contactData.notes || 'No proporcionado'}`
+      },
+      'zN5poxSAc6404Q5HP'
+    ).then(
+      (res: any) => {
+        console.log('✅ Email de contacto enviado:', res.status, res.text);
+        trackEvent('chatbot-email-sent', { status: 'success', method: detectionMethod });
+      },
+      (err: any) => {
+        console.error('❌ Error al enviar email de contacto:', err);
+        trackEvent('chatbot-email-sent', {
+          status: 'failed',
+          method: detectionMethod,
+          error: String(err?.text || err?.message || err).substring(0, 200),
+        });
+      }
+    );
+  } else {
+    console.error('EmailJS not loaded in Chatbot.tsx');
+    trackEvent('chatbot-email-sent', { status: 'emailjs_not_loaded', method: detectionMethod });
+  }
+};
+
+// Fallback: extract contact info from conversation using regex
+const extractContactFromConversation = (
+  messages: Message[],
+  botReply: string
+): ContactData | null => {
+  // Only scan user messages (not bot messages)
+  const userTexts = messages
+    .filter((m) => m.role === 'user')
+    .map((m) => m.content)
+    .join(' ');
+
+  const allText = userTexts + ' ' + botReply;
+
+  // Extract email
+  const emailMatch = allText.match(/[\w.+-]+@[\w-]+\.[\w.]+/);
+  // Extract phone (Argentine and international formats)
+  const phoneMatch = userTexts.match(
+    /(?:\+?\d{1,3}[\s-]?)?\(?\d{2,4}\)?[\s.-]?\d{3,4}[\s.-]?\d{3,4}/
+  );
+  // Extract name: check if the bot's reply mentions a name after common patterns
+  const nameFromBot = botReply.match(
+    /(?:¡[A-Za-záéíóúñÁÉÍÓÚÑ]+,?\s+)([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)/
+  );
+  const nameFromUser = userTexts.match(
+    /(?:me llamo|soy|mi nombre es)\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?)/i
+  );
+
+  const email = emailMatch?.[0] || '';
+  const phone = phoneMatch?.[0] || '';
+  const name = nameFromUser?.[1] || nameFromBot?.[1] || '';
+
+  // Only trigger if we found at least an email or phone
+  if (!email && !phone) return null;
+
+  return {
+    name,
+    email,
+    phone,
+    meeting_time: '',
+    business_type: '',
+    notes: 'Detectado automáticamente por análisis de conversación',
+  };
+};
+
 export const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
@@ -198,6 +301,9 @@ export const Chatbot = () => {
       const reply = await callGeminiAPI(updatedMessages);
 
       let cleanReply = reply;
+      let contactDetected = false;
+
+      // === METHOD 1: Explicit [CONTACT_EVENT] tag from Gemini ===
       if (reply.includes('[CONTACT_EVENT]')) {
         const parts = reply.split('[CONTACT_EVENT]');
         cleanReply = parts[0].trim();
@@ -208,38 +314,21 @@ export const Chatbot = () => {
           if (startIdx !== -1 && endIdx !== -1) {
             const cleanJsonStr = jsonStr.substring(startIdx, endIdx + 1);
             const contactData = JSON.parse(cleanJsonStr);
+            contactDetected = true;
 
-            // Send notification email via EmailJS
-            const emailjs = (window as any).emailjs;
-            if (emailjs) {
-              emailjs.send(
-                'service_bnvn7b9',
-                'template_wif78ek',
-                {
-                  name: contactData.name || 'Cliente del Chatbot',
-                  email: contactData.email || 'no-reply@nilotech.online',
-                  service: 'Reunión / Contacto desde Chatbot (Nilito)',
-                  message: `El cliente ha interactuado con Nilito y dejó datos de contacto/reunión.
-
-Detalles:
-- Nombre: ${contactData.name || 'No proporcionado'}
-- Email: ${contactData.email || 'No proporcionado'}
-- Teléfono/WhatsApp: ${contactData.phone || 'No proporcionado'}
-- Horario de Reunión (Meet): ${contactData.meeting_time || 'No proporcionado'}
-- Tipo de Negocio/Interés: ${contactData.business_type || 'No proporcionado'}
-- Notas: ${contactData.notes || 'No proporcionado'}`
-                },
-                'zN5poxSAc6404Q5HP'
-              ).then(
-                (res: any) => console.log('Email sent from Chatbot successfully:', res.status, res.text),
-                (err: any) => console.error('Email send from Chatbot failed:', err)
-              );
-            } else {
-              console.error('EmailJS not loaded in Chatbot.tsx');
-            }
+            sendContactNotification(contactData, 'contact_event_tag');
           }
         } catch (e) {
           console.error('Failed to parse contact JSON:', e, jsonStr);
+        }
+      }
+
+      // === METHOD 2: Fallback — detect contact info in conversation ===
+      if (!contactDetected) {
+        const contactInfo = extractContactFromConversation(updatedMessages, cleanReply);
+        if (contactInfo) {
+          contactDetected = true;
+          sendContactNotification(contactInfo, 'fallback_detection');
         }
       }
 
@@ -254,7 +343,7 @@ Detalles:
       // Track successful bot response
       trackEvent('chatbot-bot-response', {
         response_length: cleanReply.length,
-        has_contact_event: reply.includes('[CONTACT_EVENT]') ? 'yes' : 'no',
+        has_contact_event: contactDetected ? 'yes' : 'no',
       });
 
       if (!isOpen) setHasUnread(true);
